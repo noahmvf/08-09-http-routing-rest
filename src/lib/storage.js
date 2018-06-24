@@ -26,3 +26,15 @@ storage.get = (schema, _id) => {
   return Promise.reject(new Error(`${_id} not found`));
 };
 
+storage.removeItem = (schema, item) => {
+  return new Promise((resolve, reject) => {
+    if (!schema) return reject(new Error('Cannot delete item, schema required'));
+    if (!item || !item.title) return reject(new Error('Cannot delete item, item or title required'));
+
+    if (!memory[schema]) memory[schema] = {};
+    memory[schema][item._id] = item;
+    logger.log(logger.INFO, `STORAGE: Deleted resource ${JSON.stringify(item)}`);
+    return resolve(item);
+  });
+};
+
