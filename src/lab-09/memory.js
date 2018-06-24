@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = require('./logger');
+const logger = require('../lab-08/lib/logger');
 
 const storage = module.exports = {};
 
@@ -26,3 +26,14 @@ storage.get = (schema, _id) => {
   return Promise.reject(new Error(`${_id} not found`));
 };
 
+storage.removeItem = (schema, item) => {
+  return new Promise((resolve, reject) => { //  do we need a promise for a delete?
+    if (!schema) return reject(new Error('Cannot delete item, schema required'));
+    if (!item || !item.title) return reject(new Error('Cannot delete item, item or title required'));
+
+    if (!memory[schema]) memory[schema] = {};
+    memory[schema][item._id] = item;
+    logger.log(logger.INFO, `STORAGE: Deleted targeted resource ${JSON.stringify(item)}`);
+    return resolve(item);
+  });
+};
