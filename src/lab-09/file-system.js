@@ -10,7 +10,7 @@ storage.save = (schema, item) => {
   const json = JSON.stringify(item);
   return new Promise((resolve, reject) => {
     if (!schema) return reject(new Error('Cannot create a new item, schema required'));
-    if (!item || !item.title) return reject(new Error('Cannot create a new item, item or title required'));
+    if (!item || !item.name) return reject(new Error('Cannot create a new item, item or name required'));
     fs.writeFile(file, json, (err) => {
       if (err) return reject(err);
       return resolve(item);
@@ -30,13 +30,13 @@ storage.get = (schema, _id) => {
 };
 
 
-storage.removeItem = (schema, item) => {
+storage.delete = (schema, item) => {
   const file = `${dataDirectory}/${schema}/${item._id}.json`;
   const json = JSON.stringify(item);
   return new Promise((resolve, reject) => {
     if (!schema) return reject(new Error('Cannot create a new item, schema required'));
-    if (!item || !item.title) return reject(new Error('Cannot create a new item, item or title required'));
-    fs.writeFile(file, json, (err) => {
+    if (!item || !item.name) return reject(new Error('Cannot create a new item, item or name required'));
+    fs.unlink(file, json, (err) => {
       if (err) return reject(err);
       return resolve(item);
     });
