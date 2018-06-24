@@ -15,15 +15,15 @@ module.exports = (router) => {
       });
   });
 
-  router.get('/api/v1/note', (request, response) => {
+  router.get('/api/v1/birds', (request, response) => {
     if (!request.url.query.id) {
       customResponse.sendError(response, 404, 'Your request requires an id');
       return undefined;
     }
 
     Bird.findOne(request.url.query.id)
-      .then((note) => {
-        customResponse.sendJSON(response, 200, note);
+      .then((bird) => {
+        customResponse.sendJSON(response, 200, bird);
       })
       .catch((err) => {
         console.log(err);
@@ -31,4 +31,18 @@ module.exports = (router) => {
       });
     return undefined;
   });
+
+  // router.put('/api/v1/birds', (request, response) => {
+  //   if (!request.url.query.id) {
+  //     customResponse.sendError(response, 404, 'Your request requires an id');
+  //     return undefined;
+  //   }
+
+  //   Bird.update
+  //   (request.url.query.id)
+  //     .then((bird) => {
+
+  //     })
+
+  // });
 };
