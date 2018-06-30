@@ -6,7 +6,7 @@ const server = module.exports = {};
 const Router = require('./router');
 
 const router = new Router();
-require('./router')(router);
+require('./route/birds-router')(router);
 
 const app = http.createServer(router.route());
 

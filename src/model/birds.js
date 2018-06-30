@@ -2,7 +2,7 @@
 
 const uuid = require('uuid/v4');
 
-const storage = require('../lib/storage');
+const storage = require('../lib/storage/main');
 
 module.exports = class Bird {
   constructor(config) {
@@ -11,6 +11,10 @@ module.exports = class Bird {
     this.name = config.name;
     this.habitat = config.habitat || '';
     this.region = config.region || '';
+  }
+
+  save() {
+    return storage.save('Birds', this);
   }
 };
 

@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = require('../lab-08/lib/logger');
+const logger = require('../logger');
 
 const storage = module.exports = {};
 
@@ -9,7 +9,7 @@ const memory = {};
 storage.save = (schema, item) => {
   return new Promise((resolve, reject) => {
     if (!schema) return reject(new Error('Cannot create a new item, schema required'));
-    if (!item || !item.title) return reject(new Error('Cannot create a new item, item or title required'));
+    if (!item || !item.name) return reject(new Error('Cannot create a new item, item or name required'));
 
     if (!memory[schema]) memory[schema] = {};
     memory[schema][item._id] = item;
@@ -27,9 +27,9 @@ storage.get = (schema, _id) => {
 };
 
 storage.removeItem = (schema, item) => {
-  return new Promise((resolve, reject) => { //  do we need a promise for a delete?
+  return new Promise((resolve, reject) => {
     if (!schema) return reject(new Error('Cannot delete item, schema required'));
-    if (!item || !item.title) return reject(new Error('Cannot delete item, item or title required'));
+    if (!item || !item.name) return reject(new Error('Cannot delete item, item or name required'));
 
     if (!memory[schema]) memory[schema] = {};
     memory[schema][item._id] = item;
