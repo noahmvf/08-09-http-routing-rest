@@ -36,7 +36,7 @@ module.exports = (router) => {
     return undefined;
   });
 
-  router.put('/api/v1/birds', (request, response) => {
+  router.delete('/api/v1/birds', (request, response) => {
     logger.log(logger.INFO, 'ROUTE-BIRD: DELETE /api/v1/birds');
 
     if (!request.url.query.id) {

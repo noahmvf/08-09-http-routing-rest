@@ -30,10 +30,21 @@ describe('POST to /api/v1/birds', () => {
         throw err;
       });
   });
+
+  test('404 NOT FOUND for a bad request', () => {
+    return superagent.get(apiUrl)
+      .send({})
+      .then((response) => {
+        throw response;
+      })
+      .catch((err) => {
+        expect(err.status).toEqual(404);
+        expect(err).toBeInstanceOf(Error);
+      });
+  });
 });
 
-describe('GET to /api/v1/birds', () => {
-  let mockResourceForGet;
+describe('GET to /api/v1/birds', () => {  let mockResourceForGet;
   beforeEach((done) => {
     const newMockResource = new Bird(mockResource);
     return newMockResource.save()
@@ -51,21 +62,10 @@ describe('GET to /api/v1/birds', () => {
         expect(response.status).toEqual(200);
         expect(response.body.name).toEqual(mockResourceForGet.name);
         expect(response.body.habitat).toEqual(mockResourceForGet.habitat);
+        expect(response.body.region).toEqual(mockResourceForGet.region);
       })
       .catch((err) => {
         throw err;
-      });
-  });
-
-  test('404 NOT FOUND for GET request', () => {
-    return superagent.get(apiUrl)
-      .send({})
-      .then((response) => {
-        throw response;
-      })
-      .catch((err) => {
-        expect(err.status).toEqual(404);
-        expect(err).toBeInstanceOf(Error);
       });
   });
 });
