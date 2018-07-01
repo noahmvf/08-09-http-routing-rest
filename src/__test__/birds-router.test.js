@@ -30,74 +30,34 @@ describe('POST to /api/v1/birds', () => {
         throw err;
       });
   });
-
-  test('400 for a bad request', () => {
-    return superagent.post(apiUrl)
-      .send({})
-      .then((response) => {
-        throw response;
-      })
-      .catch((err) => {
-        expect(err.status).toEqual(400);
-        expect(err).toBeInstanceOf(Error);
-      });
-  });
 });
 
-describe('PUT to /api/v1/birds', () => {
-  test('200 PUT for successful update of a resource', () => {
-     
+describe('GET to /api/v1/birds', () => {
+  let mockResourceForGet;
+  beforeEach((done) => {
+    const newMockResource = new Bird(mockResource);
+    return newMockResource.save()
+      .then((bird) => {
+        mockResourceForGet = bird;
+        done();
+      })
+      .catch((err) => {
+        throw err;
+      });
+  });
+  test('200 successful GET request', () => {
+    return superagent.get(`${apiUrl}?id=${mockResourceForGet._id}`)
+      .then((response) => {
+        expect(response.status).toEqual(200);
+        expect(response.body.name).toEqual(mockResourceForGet.name);
+        expect(response.body.habitat).toEqual(mockResourceForGet.habitat);
+      })
+      .catch((err) => {
+        throw err;
+      });
   });
 
-  describe('GET /api/v1/birds', () => {
-    let mockResourceForGet;
-    beforeEach(() => {
-      const newBird = new Bird(mockResource);
-      newBird.save()
-        .then((bird) => {
-          mockResourceForGet = bird;
-        })
-        .catch((err) => {
-          throw err;
-        });
-    });
-
-    test('200 successful GET request', () => {
-      return superagent.get(`${apiUrl}?id=${mockResourceForGet._id}`)
-        .then((response) => {
-          expect(response.status).toEqual(200);
-          expect(response.body.name).toEqual(mockResourceForGet.name);
-          expect(response.body.habitat).toEqual(mockResourceForGet.habitat);
-          expect(response.body.createdOn).toEqual(mockResourceForGet.createdOn.toISOString());
-        })
-        .catch((err) => {
-          throw err;
-        });
-    });
-
-    test('404 NOT FOUND for GET request', () => {
-      return superagent.get(apiUrl)
-        .send({})
-        .then((response) => {
-          throw response;
-        })
-        .catch((err) => {
-          expect(err.status).toEqual(404);
-          expect(err).toBeInstanceOf(Error);
-        });
-    });
-  });
-
-  describe('DELETE /api/v1/birds', () => {
-    test('200 for successful delete of bird instance', () => {
-      return superagent.delete(apiUrl)
-        .then((response) => {
-          expect(response.body).toBeNull();
-        });
-    });
-  });
-
-  test('404 NOT FOUND for DELETE request', () => {
+  test('404 NOT FOUND for GET request', () => {
     return superagent.get(apiUrl)
       .send({})
       .then((response) => {
@@ -109,3 +69,13 @@ describe('PUT to /api/v1/birds', () => {
       });
   });
 });
+
+describe('DELETE /api/v1/birds', () => {
+  test('200 for successful delete of bird instance', () => {
+    return superagent.delete(apiUrl)
+      .then((response) => {
+        expect(response.body).toBeNull();
+      });
+  });
+});
+

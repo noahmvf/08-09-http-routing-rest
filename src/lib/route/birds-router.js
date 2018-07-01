@@ -36,17 +36,21 @@ module.exports = (router) => {
     return undefined;
   });
 
-  // router.put('/api/v1/birds', (request, response) => {
-  //   if (!request.url.query.id) {
-  //     customResponse.sendError(response, 404, 'Your request requires an id');
-  //     return undefined;
-  //   }
+  router.put('/api/v1/birds', (request, response) => {
+    logger.log(logger.INFO, 'ROUTE-BIRD: DELETE /api/v1/birds');
 
-  //   Bird.update
-  //   (request.url.query.id)
-  //     .then((bird) => {
+    if (!request.url.query.id) {
+      customResponse.sendError(response, 404, 'Your request requires an id');
+      return undefined;
+    }
 
-  //     })
-
-  // });
+    Bird.deleteOne(request.url.query.id)
+      .then((birdId) => {
+        customResponse.sendJSON(response, 204, birdId);
+      })
+      .catch((err) => {
+        customResponse.sendError(response, 404, err.message);
+      });
+    return undefined;
+  });
 };
