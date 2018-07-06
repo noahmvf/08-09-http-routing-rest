@@ -1,6 +1,6 @@
 'use strict';
 
-const logger = require('../logger');
+const logger = require('./../logger');
 
 const storage = module.exports = {};
 
@@ -9,7 +9,7 @@ const memory = {};
 storage.save = (schema, item) => {
   return new Promise((resolve, reject) => {
     if (!schema) return reject(new Error('Cannot create a new item, schema required'));
-    if (!item || !item.name) return reject(new Error('Cannot create a new item, item or name required'));
+    if (!item || !item.name) return reject(new Error('Cannot create a new item, item and item.name required'));
 
     if (!memory[schema]) memory[schema] = {};
     memory[schema][item._id] = item;
@@ -26,14 +26,18 @@ storage.get = (schema, _id) => {
   return Promise.reject(new Error(`${_id} not found`));
 };
 
-storage.removeItem = (schema, item) => {
+storage.delete = (schema, _id) => {
   return new Promise((resolve, reject) => {
-    if (!schema) return reject(new Error('Cannot delete item, schema required'));
-    if (!item || !item.name) return reject(new Error('Cannot delete item, item or name required'));
+    if (!schema) return reject(new Error('Cannot delete item. Schema required'));
+    if (!_id) return reject(new Error('Cannot delete item. Id required'));
 
-    if (!memory[schema]) memory[schema] = {};
-    memory[schema][item._id] = item;
-    logger.log(logger.INFO, `STORAGE: Deleted targeted resource ${JSON.stringify(item)}`);
-    return resolve(item);
+    if (!memory[schema][_id]) return reject(new Error('Unable to delete. No item with that Id exists.'));
+    
+    if (memory[schema][_id]) {
+      logger.log(logger.INFO, `STORAGE: deleting ${JSON.stringify(memory[schema][_id])}`);
+      delete memory[schema][_id];
+      return resolve(_id);
+    }
+    return undefined;
   });
 };
