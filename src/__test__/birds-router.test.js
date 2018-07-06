@@ -1,6 +1,5 @@
 'use strict';
 
-const faker = require('faker');
 const superagent = require('superagent');
 const server = require('../lib/server');
 // const Bird = require('../model/birds');
@@ -8,9 +7,9 @@ const server = require('../lib/server');
 const apiUrl = 'http://localhost:5000/api/v1/birds';
 
 const mockResource = {
-  name: faker.lorem.words(1),
-  habitat: faker.lorem.words(1),
-  region: faker.lorem.words(2),
+  name: 'Mock Bird',
+  habitat: 'Mock Habitat',
+  region: 'Mock Region',
 };
 
 beforeAll(() => server.start(5000));
