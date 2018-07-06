@@ -1,8 +1,8 @@
 'use strict';
 
-const Bird = require('../../model/birds');
-const logger = require('../logger');
-const customResponse = require('../response');
+const Bird = require('../model/birds');
+const logger = require('../lib/logger');
+const customResponse = require('../lib/response');
 
 module.exports = (router) => {
   router.post('/api/v1/birds', (request, response) => {
