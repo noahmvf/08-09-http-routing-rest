@@ -15,5 +15,13 @@ module.exports = class Bird {
   save() {
     return storage.save('Birds', this);
   }
+
+  static findOne(_id) {
+    return storage.get('Birds', _id);
+  }
+
+  static delete(_id) {
+    return storage.delete('Birds', _id);
+  }
 };
 

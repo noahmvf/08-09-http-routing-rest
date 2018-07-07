@@ -1,8 +1,8 @@
 'use strict';
 
-const Bird = require('../../model/birds');
-const logger = require('../logger');
-const customResponse = require('../response');
+const Bird = require('../model/birds');
+const logger = require('../lib/logger');
+const customResponse = require('../lib/response');
 
 module.exports = (router) => {
   router.post('/api/v1/birds', (request, response) => {
@@ -44,9 +44,10 @@ module.exports = (router) => {
       return undefined;
     }
 
-    Bird.deleteOne(request.url.query.id)
+    Bird.delete(request.url.query.id)
       .then((birdId) => {
-        customResponse.sendJSON(response, 204, birdId);
+        customResponse.sendJSON(response, 200, birdId);
+        console.log(`${request.url.query.id} deleted`);
       })
       .catch((err) => {
         customResponse.sendError(response, 404, err.message);

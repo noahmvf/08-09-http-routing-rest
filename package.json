@@ -1,5 +1,5 @@
 {
-  "name": "08-rest-api",
+  "name": "day-01",
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
@@ -8,8 +8,7 @@
     "testWatch": "jest --coverage --watchAll",
     "test-nolint": "jest --coverage",
     "lint": "eslint .",
-    "start": "node index.js",
-    "dev-start": "nodemon index.js"
+    "start": "nodemon index.js"
   },
   "keywords": [],
   "author": "",
@@ -25,12 +24,10 @@
     "eslint-plugin-jest": "^21.17.0",
     "eslint-plugin-react": "^7.9.1",
     "jest": "^23.1.0",
-    "nodemon": "^1.17.5",
-    "superagent": "^3.8.3",
     "winston": "^3.0.0"
   },
   "dependencies": {
-    "faker": "^4.1.0",
+    "superagent": "^3.8.3",
     "uuid": "^3.2.1"
   }
 }

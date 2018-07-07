@@ -1,8 +1,7 @@
 'use strict';
 
-const logger = require('./logger');
-const bodyParser = require('./body-parser');
-const customResponse = require('./response');
+const bodyParser = require('./body-parser.js');
+const customRes = require('./response.js');
 
 module.exports = class Router {
   constructor() {
@@ -23,7 +22,7 @@ module.exports = class Router {
   }
 
   put(endpoint, callback) {
-    this.routes.PUT[endpoint] = callback;  
+    this.routes.PUT[endpoint] = callback;
   }
 
   delete(endpoint, callback) {
@@ -31,20 +30,21 @@ module.exports = class Router {
   }
 
   route() {
-    return (request, response) => {
-      Promise.all([bodyParser(request)])
+    return (req, res) => {
+      Promise.all([bodyParser(req)])
         .then(() => {
-          const reqResCallback = this.routes[request.method][request.url.pathname];
+          const reqResCallback = this.routes[req.method][req.url.pathname];
           const isFunction = typeof reqResCallback === 'function';
-          if (isFunction) return reqResCallback(request, response);
+          if (isFunction) return reqResCallback(req, res);
 
-          customResponse.sendError(response, 404, 'Route Not Registered');
+          customRes.sendError(res, 404, 'Route Not Registered');
           return undefined;
         })
         .catch((err) => {
-          logger.log(logger.INFO, JSON.stringify(err));
-          customResponse.sendError(response, 404, 'Route Not Found');
-          return undefined;        
+          console.log(err);
+
+          customRes.sendError(res, 404, 'Route Not Found');
+          return undefined;
         });
     };
   }

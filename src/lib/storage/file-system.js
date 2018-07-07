@@ -8,9 +8,11 @@ const dataDirectory = `${__dirname}/../../data`;
 storage.save = (schema, item) => {
   const file = `${dataDirectory}/${schema}/${item._id}.json`;
   const json = JSON.stringify(item);
+
   return new Promise((resolve, reject) => {
-    if (!schema) return reject(new Error('Cannot create a new item, schema required'));
-    if (!item || !item.name) return reject(new Error('Cannot create a new item, item or name required'));
+    if (!schema) return reject(new Error('Missing schema'));
+    if (!item || !item.nameEng) return reject(new Error('Missing item'));
+
     fs.writeFile(file, json, (err) => {
       if (err) return reject(err);
       return resolve(item);
@@ -21,6 +23,7 @@ storage.save = (schema, item) => {
 
 storage.get = (schema, _id) => {
   const targetFile = `${dataDirectory}/${schema}/${_id}.json`;
+  
   return new Promise((resolve, reject) => {
     fs.readFile(targetFile, (err, data) => {
       if (err) return reject(err);
@@ -29,17 +32,13 @@ storage.get = (schema, _id) => {
   });
 };
 
+storage.delete = (schema, _id) => {
+  const targetFile = `${dataDirectory}/${schema}/${_id}.json`;
 
-storage.delete = (schema, item) => {
-  const file = `${dataDirectory}/${schema}/${item._id}.json`;
-  const json = JSON.stringify(item);
   return new Promise((resolve, reject) => {
-    if (!schema) return reject(new Error('Cannot create a new item, schema required'));
-    if (!item || !item.name) return reject(new Error('Cannot create a new item, item or name required'));
-    fs.unlink(file, json, (err) => {
+    fs.unlink(targetFile, (err) => {
       if (err) return reject(err);
-      return resolve(item);
+      return resolve(targetFile);
     });
-    return undefined;
   });
 };
