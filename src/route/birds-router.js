@@ -21,7 +21,7 @@ module.exports = (router) => {
 
   router.get('/api/v1/birds', (request, response) => {
     if (!request.url.query.id) {
-      customResponse.sendError(response, 404, 'Your request requires an id');
+      customResponse.sendError(response, 404, 'Request requires an id');
       return undefined;
     }
 
