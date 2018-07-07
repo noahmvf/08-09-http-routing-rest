@@ -3,33 +3,33 @@
 const url = require('url');
 const queryString = require('querystring');
 
-module.exports = (request) => {
+module.exports = (req) => {
   return new Promise((resolve, reject) => {
-    if (!request || !request.url) return reject(new Error('Invalid Request Object. Cannot parse'));
+    if (!req || !req.url) return reject(new Error('Invalid request object; cannot parse'));
 
-    request.url = url.parse(request.url);
-    request.url.query = queryString.parse(request.url.query);
-
-    if (!request.method.match(/POST|PUT|PATCH/)) {
-      return resolve(request);
+    req.url = url.parse(req.url);
+    req.url.query = queryString.parse(req.url.query);
+    
+    if (!req.method.match(/POST|PUT|PATCH/)) {
+      return resolve(req);
     }
 
     let message = '';
 
-    request.on('data', (data) => {
+    req.on('data', (data) => {
       message += data.toString();
     });
-
-    request.on('end', () => {
+    
+    req.on('end', () => {
       try {
-        request.body = JSON.parse(message);
-        return resolve(request);
+        req.body = JSON.parse(message);
+        return resolve(req);
       } catch (err) {
         return reject(err);
       }
     });
 
-    request.on('error', reject);
+    req.on('error', reject);
     return undefined;
   });
 };
