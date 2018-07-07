@@ -12,7 +12,7 @@ const mockResource = {
   region: 'Mock Region',
 };
 
-beforeAll(() => server.start(5000));
+beforeAll(() => server.start(process.env.PORT || 3000));
 afterAll(() => server.stop());
 
 describe('POST to /api/v1/birds', () => {
