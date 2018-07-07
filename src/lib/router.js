@@ -23,29 +23,32 @@ module.exports = class Router {
   }
 
   put(endpoint, callback) {
-    this.routes.PUT[endpoint] = callback;  
+    this.routes.PUT[endpoint] = callback;
   }
-
   delete(endpoint, callback) {
     this.routes.DELETE[endpoint] = callback;
   }
 
   route() {
     return (request, response) => {
-      Promise.all([bodyParser(request)])
+      Promise.all([bodyParser(request)]) 
         .then(() => {
-          const reqResCallback = this.routes[request.method][request.url.pathname];
-          const isFunction = typeof reqResCallback === 'function';
-          if (isFunction) return reqResCallback(request, response);
-
+          // [request.method] = 'GET' 'POST' 'PUT' 'DELETE'
+          const requestResponseCallback = this.routes[request.method][request.url.pathname];
+          const isFunction = typeof requestResponseCallback === 'function';
+          if (isFunction) return requestResponseCallback(request, response);
+          console.log(request, 'something something something');
+          
           customResponse.sendError(response, 404, 'Route Not Registered');
           return undefined;
         })
         .catch((err) => {
+          console.log(err, 'hey my name is error');
           logger.log(logger.INFO, JSON.stringify(err));
           customResponse.sendError(response, 404, 'Route Not Found');
-          return undefined;        
+          return undefined;
         });
     };
   }
 };
+
