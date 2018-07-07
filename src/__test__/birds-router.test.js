@@ -83,9 +83,7 @@ describe('DELETE /api/v1/birds', () => {
         id = response.body._id;
       });
   });
-
   test('200 for successful delete of bird instance', () => {
-    console.log('FAK FAK FAK FAK');
     return superagent.delete(`${apiUrl}?id=${id}`)
       .then((response) => {
         expect(response.status).toEqual(200);
