@@ -2,7 +2,7 @@
 
 const superagent = require('superagent');
 const server = require('../lib/server');
-// const Bird = require('../model/birds');
+const Bird = require('../model/birds');
 
 const apiUrl = 'http://localhost:5000/api/v1/birds';
 
@@ -44,42 +44,55 @@ describe('POST to /api/v1/birds', () => {
   });
 });
 
-// describe('GET /api/v1/birds', () => {
-//   let mockResourceForGet;
-//   beforeEach((done) => {
-//     const newBird = new Bird(mockResource);
-//     newBird.save()
-//       .then((bird) => {
-//         mockResourceForGet = bird;
-//         done();
-//       })
-//       .catch((err) => { 
-//         throw err;
-//       });
-//   });
+describe('GET /api/v1/birds', () => {
+  let mockResourceForGet;
+  beforeEach((done) => {
+    const newBird = new Bird(mockResource);
+    newBird.save()
+      .then((bird) => {
+        mockResourceForGet = bird;
+        done();
+      })
+      .catch((err) => { 
+        throw err;
+      });
+  });
 
-//   test('200 successful GET request', () => {
-//     console.log(apiUrl);
-//     return superagent.get(`${apiUrl}?id=${mockResourceForGet._id}`)
-//       .then((response) => {
-//         expect(response.status).toEqual(200);
-//         expect(response.body.name).toEqual(mockResourceForGet.name);
-//         expect(response.body.habitat).toEqual(mockResourceForGet.habitat);
-//         expect(response.body.region).toEqual(mockResourceForGet.region);
-//         expect(response.body._id).toBeTruthy();
-//       })
-//       .catch((err) => {
-//         throw err;
-//       });
-//   });
-// });
+  test('200 successful GET request', () => {
+    console.log(apiUrl);
+    return superagent.get(`${apiUrl}?id=${mockResourceForGet._id}`)
+      .then((response) => {
+        expect(response.status).toEqual(200);
+        expect(response.body.name).toEqual(mockResourceForGet.name);
+        expect(response.body.habitat).toEqual(mockResourceForGet.habitat);
+        expect(response.body.region).toEqual(mockResourceForGet.region);
+        expect(response.body._id).toBeTruthy();
+      })
+      .catch((err) => {
+        throw err;
+      });
+  });
+});
 
-// describe('DELETE /api/v1/birds', () => {
-//   test('200 for successful delete of bird instance', () => {
-//     return superagent.delete(apiUrl)
-//       .then((response) => {
-//         expect(response.status).toEqual(204);
-//       });
-//   });
-// });
+describe('DELETE /api/v1/birds', () => {
+  let id;
+  beforeAll(() => {
+    return superagent.post(apiUrl)
+      .send(mockResource)
+      .then((response) => {
+        id = response.body._id;
+      });
+  });
+
+  test('200 for successful delete of bird instance', () => {
+    console.log('FAK FAK FAK FAK');
+    return superagent.delete(`${apiUrl}?id=${id}`)
+      .then((response) => {
+        expect(response.status).toEqual(200);
+      })
+      .catch((err) => {
+        throw err;
+      });
+  });
+});
 

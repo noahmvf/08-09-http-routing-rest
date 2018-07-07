@@ -16,12 +16,12 @@ module.exports = class Bird {
     return storage.save('Birds', this);
   }
 
-  // findOne(_id) {
-  //   return storage.get('Birds', _id, this);
-  // }
+  static findOne(_id) {
+    return storage.get('Birds', _id);
+  }
 
-  // delete(_id) {
-  //   return storage.delete('Birds', _id, this);
-  // }
+  static delete(_id) {
+    return storage.delete('Birds', _id);
+  }
 };
 
