@@ -2,8 +2,6 @@
 
 const uuid = require('uuid/v4');
 
-const storage = require('../lib/storage');
-
 module.exports = class Bird {
   constructor(config) {
     this._id = uuid();

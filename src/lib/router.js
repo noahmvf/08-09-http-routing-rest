@@ -1,48 +1,50 @@
 'use strict';
 
-const Bird = require('../model/birds');
-const logger = require('../lib/logger');
-const customResponse = require('../lib/response');
+const logger = require('./logger');
+const bodyParser = require('./body-parser');
+const customResponse = require('./response');
 
-module.exports = (router) => {
-  router.post('/api/v1/birds', (request, response) => {
-    logger.log(logger.INFO, 'ROUTE-BIRD: POST /api/v1/birds');
-    const newBird = new Bird(request.body);
-    newBird.save()
-      .then((bird) => {
-        customResponse.sendJSON(response, 200, bird);
-        return undefined;
-      });
-  });
 
-  router.get('/api/v1/birds', (request, response) => {
-    if (!request.url.query.id) {
-      customResponse.sendError(response, 404, 'Your request requires an id');
-      return undefined;
-    }
+module.exports = class Router {
+  constructor() {
+    this.routes = {
+      GET: {},
+      POST: {},
+      PUT: {},
+      DELETE: {},
+    };
+  }
+  get(endpoint, callback) {
+    this.routes.GET[endpoint] = callback;
+  }
 
-    Bird.findOne(request.url.query.id)
-      .then((bird) => {
-        customResponse.sendJSON(response, 200, bird);
-      })
-      .catch((err) => {
-        console.log(err);
-        customResponse.sendError(response, 404, err.message);
-      });
-    return undefined;
-  });
+  post(endpoint, callback) {
+    this.routes.POST[endpoint] = callback;
+  }
 
-  // router.put('/api/v1/birds', (request, response) => {
-  //   if (!request.url.query.id) {
-  //     customResponse.sendError(response, 404, 'Your request requires an id');
-  //     return undefined;
-  //   }
+  put(endpoint, callback) {
+    this.routes.PUT[endpoint] = callback;
+  }
+  delete(endpoint, callback) {
+    this.routes.DELETE[endpoint] = callback;
+  }
 
-  //   Bird.update
-  //   (request.url.query.id)
-  //     .then((bird) => {
-
-  //     })
-
-  // });
+  route() {
+    return (request, response) => {
+      Promise.all([bodyParser(request)]) 
+        .then(() => {
+          const requestResponseCallback = this.routes[request.method][request.url.pathname];
+          const isFunction = typeof requestResponseCallback === 'function';
+          if (isFunction) return requestResponseCallback(request, response);
+          
+          customResponse.sendError(response, 404, 'Route Not Registered');
+          return undefined;
+        })
+        .catch((err) => {
+          logger.log(logger.INFO, JSON.stringify(err));
+          customResponse.sendError(response, 404, 'Route Not Found');
+          return undefined;
+        });
+    };
+  }
 };
