@@ -46,7 +46,7 @@ module.exports = (router) => {
 
     Bird.delete(request.url.query.id)
       .then((birdId) => {
-        customResponse.sendJSON(response, 200, birdId);
+        customResponse.sendJSON(response, 204, birdId);
         console.log(`${request.url.query.id} deleted`);
       })
       .catch((err) => {
